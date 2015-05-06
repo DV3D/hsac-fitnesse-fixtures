@@ -22,6 +22,7 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
@@ -484,6 +485,72 @@ public class BrowserTest extends SlimFixture {
             }
         }
         return result;
+    }
+
+    public boolean doubleClick(String place) {
+        // adapted from click()
+        // if other element hides the element (in Chrome) an exception is thrown
+        // we retry doubleClicking the element a few times before giving up.
+        boolean result = false;
+        for (int i = 0;
+             !result;
+             i++) {
+            try {
+                if (i > 0) {
+                    waitSeconds(1);
+                }
+                result = doubleClickImpl(place);
+            } catch (TimeoutException e) {
+                String message = getTimeoutMessage(e);
+                throw new SlimFixtureException(false, message, e);
+            } catch (WebDriverException e) {
+                String msg = e.getMessage();
+                if (!msg.contains("Other element would receive the doubleClick")
+                        || i == secondsBeforeTimeout()) {
+                    // unexpected exception or too many tries: throw to wiki
+                    String message = getSlimFixtureExceptionMessage("doubleClickError", place, msg, e);
+                    throw new SlimFixtureException(false, message, e);
+                }
+            }
+        }
+        return result;
+    }
+
+    protected boolean doubleClickImpl(String place) {
+        WebElement element = getElement(place);
+        if (element == null) {
+            element = findByXPath("//*[@onclick and normalize-space(text())='%s']", place);
+            if (element == null) {
+                element = findByXPath("//*[@onclick and contains(normalize-space(text()),'%s')]", place);
+                if (element == null) {
+                    element = findByXPath("//*[@onclick and normalize-space(descendant::text())='%s']", place);
+                    if (element == null) {
+                        element = findByXPath("//*[@onclick and contains(normalize-space(descendant::text()),'%s')]", place);
+                    }
+                }
+            }
+        }
+        return doubleClickElement(element);
+    }
+
+    public boolean doubleClickElement(final WebElement element) {
+        return waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver webDriver) {
+                boolean result = false;
+                if (element == null)
+                    return false;
+
+                scrollIfNotOnScreen(element);
+                if (element.isDisplayed() == false || element.isEnabled() == false)
+                    return false;
+
+                WebDriver driver = getSeleniumHelper().driver();
+                Actions action = new Actions(driver);
+                action.moveToElement(element).doubleClick().perform();
+                return true;
+            }
+        });
     }
 
     public boolean waitForPage(final String pageName) {
