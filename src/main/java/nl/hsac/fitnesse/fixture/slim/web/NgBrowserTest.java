@@ -1,5 +1,6 @@
 package nl.hsac.fitnesse.fixture.slim.web;
 
+import nl.hsac.fitnesse.fixture.slim.StopTestException;
 import nl.hsac.fitnesse.fixture.util.NgClientSideScripts;
 import nl.hsac.fitnesse.slim.interaction.ReflectionHelper;
 import org.openqa.selenium.By;
@@ -53,12 +54,21 @@ public class NgBrowserTest extends BrowserTest {
     }
 
     @Override
-    protected void beforeInvoke(Method method, Object[] arguments) {
-        String methodName = method.getName();
-        if (!METHODS_NO_WAIT.contains(methodName)) {
+    protected void waitForAngularIfNeeded(Method method) {
+        if (requiresWaitForAngular(method)) {
             waitForAngularRequestsToFinish();
         }
-        super.beforeInvoke(method, arguments);
+    }
+
+    /**
+     * Determines whether method requires waiting for all Angular requests to finish
+     * before it is invoked.
+     * @param method method to be invoked.
+     * @return true, if waiting for Angular is required, false otherwise.
+     */
+    protected boolean requiresWaitForAngular(Method method) {
+        String methodName = method.getName();
+        return !METHODS_NO_WAIT.contains(methodName);
     }
 
     @Override
@@ -75,7 +85,11 @@ public class NgBrowserTest extends BrowserTest {
         if (root == null) {
             root = "body";
         }
-        waitForJavascriptCallback(NgClientSideScripts.WaitForAngular, root);
+        Object result = waitForJavascriptCallback(NgClientSideScripts.WaitForAngular, root);
+        if (result != null) {
+            String msg = getSlimFixtureExceptionMessage("angular", result.toString(), null);
+            throw new StopTestException(false, msg);
+        }
     }
 
     @Override
