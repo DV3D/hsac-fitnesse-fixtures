@@ -36,11 +36,37 @@ import java.util.concurrent.TimeUnit;
 
 public class BrowserTest extends SlimFixture {
     private SeleniumHelper seleniumHelper = getEnvironment().getSeleniumHelper();
+    private NgBrowserTest ngBrowserTest;
     private int secondsBeforeTimeout;
-    private int waitAfterScroll = 0;
+    private int waitAfterScroll = 150;
     private String screenshotBase = new File(filesDir, "screenshots").getPath() + "/";
     private String screenshotHeight = "200";
     private String downloadBase = new File(filesDir, "downloads").getPath() + "/";
+
+    @Override
+    protected void beforeInvoke(Method method, Object[] arguments) {
+        super.beforeInvoke(method, arguments);
+        waitForAngularIfNeeded(method);
+    }
+
+    /**
+     * Determines whether the current method might require waiting for angular given the currently open site,
+     * and ensure it does if needed.
+     * @param method
+     */
+    protected void waitForAngularIfNeeded(Method method) {
+        if (ngBrowserTest == null) {
+            ngBrowserTest = new NgBrowserTest();
+        }
+        if (ngBrowserTest.requiresWaitForAngular(method) && currentSiteUsesAngular()) {
+            ngBrowserTest.waitForAngularRequestsToFinish();
+        }
+    }
+
+    protected boolean currentSiteUsesAngular() {
+        Object windowHasAngular = getSeleniumHelper().executeJavascript("return window.angular?1:0;");
+        return Long.valueOf(1).equals(windowHasAngular);
+    }
 
     @Override
     protected Throwable handleException(Method method, Object[] arguments, Throwable t) {
@@ -607,14 +633,7 @@ public class BrowserTest extends SlimFixture {
     }
 
     protected String cleanExpectedValue(String expectedText) {
-        String textToLookFor;
-        if (expectedText != null) {
-            // wiki sends newlines as <br/>, Selenium reports <br/> as newlines ;-)
-            textToLookFor = expectedText.replace("<br/>", "\n");
-        } else {
-            textToLookFor = expectedText;
-        }
-        return textToLookFor;
+        return cleanupValue(expectedText);
     }
 
     protected boolean hasText(WebElement element, String textToLookFor) {
@@ -657,6 +676,26 @@ public class BrowserTest extends SlimFixture {
             }
         });
         return result;
+    }
+
+    public boolean waitForXPathVisible(final String xPath) {
+        By by = By.xpath(xPath);
+        return waitForVisible(by);
+    }
+
+    protected boolean waitForVisible(final By by) {
+        return waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver webDriver) {
+                Boolean result = Boolean.FALSE;
+                WebElement element = getSeleniumHelper().findElement(by);
+                if (element != null) {
+                    scrollIfNotOnScreen(element);
+                    result = element.isDisplayed();
+                }
+                return result;
+            }
+        });
     }
 
     public String valueOf(String place) {
@@ -855,6 +894,11 @@ public class BrowserTest extends SlimFixture {
 
     protected WebElement getElement(String place) {
         return getSeleniumHelper().getElement(place);
+    }
+
+    public boolean clickByXPath(String xPath) {
+        WebElement element = findByXPath(xPath);
+        return clickElement(element);
     }
 
     public String textByXPath(String xPath) {
@@ -1350,5 +1394,13 @@ public class BrowserTest extends SlimFixture {
         } catch (TimeoutException e) {
             return handleTimeoutException(e);
         }
+    }
+
+    public NgBrowserTest getNgBrowserTest() {
+        return ngBrowserTest;
+    }
+
+    public void setNgBrowserTest(NgBrowserTest ngBrowserTest) {
+        this.ngBrowserTest = ngBrowserTest;
     }
 }
