@@ -1,5 +1,11 @@
-!1 Website testing using !-BrowserTest-!
+#|script|browser test|
+#| start browser | ${BROWSER} | on url | http://localhost:${FITNESSE_PORT} |
+#| set browser width | 1024 |
+#| ensure | do | verifyTextPresent | on | !-HsacExamples-! |
+#| ensure | do | clickAndWait | on | css=!-a[href='HsacExamples']-! |
+#| ensure | do | verifyTextPresent | on | !-Browser Tests-! |
 
+!1 Website testing using !-BrowserTest-!
 
 On this page we test whether we can find a nice house which is for sale in Utrecht, The Netherlands. 
 We check whether they have not been changing the original asking price or its size in square meters. Furthermore we look at, and capture, the first three pictures
@@ -11,17 +17,17 @@ The configuration of Selenium (i.e. which browser to use) and starting the brows
 
 |script        |browser test            |
 |open          |http://www.kpnvandaag.nl|
-|press         |Tab                     |
 |wait for class|KPN_cookie_button       |
 |click         |Cookies accepteren      |
 |click         |Spotify                 |
-|double click  |Spotify                                                                                  |
-|press         |Control+a                                                                                |
-|press         |Delete                                                                                   |
-|press         |Test tabblad                                                                             |
-|press         |Enter                                                                                    |
-|wait seconds  |3                                                                                        |
+|double click  |Spotify                 |
+|press         |Control+a               |
+|press         |Delete                  |
+|press         |Test tabblad            |
+|press         |Enter                   |
+|wait seconds  |2                       |
 
+#|press         |Tab                     |
 #|click         |...|
 
 #|click         |//li[contains(@class,'bp-tabContFn-tab')][last()]//div[contains(@class,'tab-icon-trash')]|

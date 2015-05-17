@@ -136,6 +136,9 @@ public class SeleniumHelper {
         if (element == null) {
             element = findElement(byCss("input[value~='%s']:not([type='hidden'])", place));
         }
+        if (element == null) { //solution for buttons shaped as div element without onclick attribute (e.g. cookiemelding op kpnvandaag.nl)
+            element = findElement(byXpath("//div/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::div[1]", place));
+        }
         if (element == null) {
             element = findElement(By.partialLinkText(place));
         }
@@ -144,9 +147,6 @@ public class SeleniumHelper {
         }
         if (element == null) {
             element = findElement(byXpath("//th/descendant-or-self::text()[contains(normalize-space(.), '%s')]/ancestor-or-self::th[1]/../td ", place));
-        }
-        if (element == null) { //solution for buttons shaped as div element without onclick attribute (e.g. cookiemelding op kpnvandaag.nl)
-            element = findElement(byXpath("//div/descendant-or-self::text()[normalize-space(.)='%s']/ancestor-or-self::div[1]", place));
         }
         return element;
     }

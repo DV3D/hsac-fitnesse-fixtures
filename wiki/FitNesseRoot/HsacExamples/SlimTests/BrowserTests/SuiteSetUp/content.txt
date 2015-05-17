@@ -4,30 +4,27 @@ This means we do not have to do this in every test, which means easier maintenan
 
 Stopping the browser is done in SuiteTearDown, which is done after all tests in this suite are completed.
 
-!***> Fixture code locations
 !include -c .HsacExamples.SlimTests.SuiteSetUp
-
-|Import                           |
-|nl.hsac.fitnesse.fixture.slim.web|
-
-*!
-
+!|import                                  |
+|nl.hsac.fitnesse.fixture.slim.web       |
+|nl.hsac.fitnesse.fixture.slim.web.xebium|
+|com.xebia.incubator.xebium              |
+!|script          |selenium driver setup|
+|start driver for|${BROWSER}           |
+!|library                     |
+|hsac selenium driver fixture|
 The Selenium configuration below uses lines starting with ''|note'' to have configuration values present that are not currently used.
 This allows us to switch to another browser by just adding ''|note'' to one line and removing it from another, instead of typing the entire line.
 
 Furthermore this configuration is prepared for both running the browser on the same (development) machine running Fitnesse (with ''start driver for''), as remotely on a node in a Selenium Grid (with ''connect to driver for''). 
 The latter allows tests to be executed on different operating systems. This is also very useful to run tests as part of a continuous integration server (i.e. build server), when no browsers are installed on the server running the tests. 
-
 !define GRID_HUB {http://remote-selenium.local:4444/wd/hub}
-
-!|script         |selenium driver setup                                                                                                       |
-|start driver for|chrome                                                                                                                      |
-|note            |start driver for     |internet explorer                                                                                     |
-|note            |start driver for     |firefox                                                                                               |
-|note            |start driver for     |safari                                                                                                |
-|note            |start driver for     |phantomjs                                                                                             |
-|note            |connect to driver for|chrome           |at               |${GRID_HUB}                                                       |
-|note            |connect to driver for|internet explorer|at               |${GRID_HUB}                                                       |
-|note            |connect to driver for|firefox          |at               |${GRID_HUB}                                                       |
-|note            |connect to driver at |${GRID_HUB}      |with capabilities|!{browserName:internet explorer, platform:Windows 8.1, version:11}|
-|show            |driver description                                                                                                          |
+#|note            |start driver for     |internet explorer                                                                                     |
+#|note            |start driver for     |firefox                                                                                               |
+#|note            |start driver for     |safari                                                                                                |
+#|note            |start driver for     |phantomjs                                                                                             |
+#|note            |connect to driver for|chrome           |at               |${GRID_HUB}                                                       |
+#|note            |connect to driver for|internet explorer|at               |${GRID_HUB}                                                       |
+#|note            |connect to driver for|firefox          |at               |${GRID_HUB}                                                       |
+#|note            |connect to driver at |${GRID_HUB}      |with capabilities|!{browserName:internet explorer, platform:Windows 8.1, version:11}|
+#|show            |driver description                                                                                                          |

@@ -60,6 +60,9 @@ The location when working standalone:
 !path fixtures
 !path fixtures/*.jar
 
+!***> Preset variables
+!define BROWSER {chrome}
+
 When developing and changing the fixtures, we will work based on the pom.xml:
 !pomFile ../pom.xml@compile
 *!

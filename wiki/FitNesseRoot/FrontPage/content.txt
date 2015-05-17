@@ -3,6 +3,9 @@
 # Here is a good place to add your first page (WikiWord). For example, MyTopLevelApplicationPage
 
 This installation is extended with features from the project hsac-fitnesse-fixtures. Documentation about these features can be found in HsacExamples.
+The Xebium fixture examples are available in ProjectXebium.
+
+ExampleProject for combining Hsac's Browser Test with Xebium.
 
 To add your first "page", click the [[Edit][FrontPage?edit]] button and add a [[!-WikiWord-!][FitNesse.UserGuide.FitNesseWiki.WikiWord]] to the page.
 
