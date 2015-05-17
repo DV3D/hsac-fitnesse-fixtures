@@ -1,0 +1,8 @@
+| script |
+| start browser | ${BROWSER} | on url | http://localhost:${FITNESSE_PORT} |
+| set step delay to | slow |
+| ensure | do | open | on |  |
+| ensure | do | verifyText | on | css=h1 | with | !-Welcome to FitNesse!-! |
+| ensure | do | verifyNotText | on | css=.breadcrumb>li | with | Page |
+| ensure | do | verifyText | on | css=.breadcrumb>li | with | glob:*Page |
+| ensure | do | verifyTextPresent | on | Page |

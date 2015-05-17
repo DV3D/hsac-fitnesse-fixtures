@@ -1,0 +1,10 @@
+!|import                                 |
+|nl.hsac.fitnesse.fixture                |
+|nl.hsac.fitnesse.fixture.slim           |
+|nl.hsac.fitnesse.fixture.slim.web       |
+|nl.hsac.fitnesse.fixture.slim.web.xebium|
+|com.xebia.incubator.xebium              |
+!|script          |selenium driver setup |
+|start driver for |${BROWSER}            |
+!|library                                |
+|hsac selenium driver fixture            |

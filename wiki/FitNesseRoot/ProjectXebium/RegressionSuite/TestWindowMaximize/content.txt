@@ -1,0 +1,5 @@
+!| script     |
+|start browser|${BROWSER}    |on url|http://localhost:${FITNESSE_PORT}/|
+|do           |open          |on    |FrontPage                         |
+|do           |windowMaximize|on    |                                  |
+|do           |pause         |on    |1000                              |

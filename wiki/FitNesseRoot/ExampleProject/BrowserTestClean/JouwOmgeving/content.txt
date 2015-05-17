@@ -1,0 +1,15 @@
+!4 This test uses xPath only where needed:
+
+|script|browser test|
+|open|https://reik-staging.jouwomgeving.nl/login/|
+|enter|specialist-client|as|Gebruikersnaam|
+|check|value of|Gebruikersnaam|specialist-client|
+|enter|Gr6Hg7BEmBMXxbVwhvEpUQkZ|as|Wachtwoord|
+|click|Inloggen|
+|click|Berichten|
+|click|meer berichten|
+|wait for xPath|//*[@id='content']//ul/a[28]|visible|
+|check|text by xPath|//*[@id='content']//ul/a[28]//h3|De intake van jou is gepubliceerd|
+|click by xPath|//a[@class='dropdown-toggler']|
+|click by xPath|//a[@class='dropdown-toggler']|
+|click|Uitloggen|

@@ -1,0 +1,12 @@
+!contents -R2 -g -h
+!***> Variables Defined
+!define TEST_SYSTEM {slim}
+!define BROWSER {chrome}
+***!
+!***> Pom file
+!pomFile ../pom.xml@runtime
+***!
+!***> Location when working standalone
+!path fixtures
+!path fixtures/*.jar
+***!

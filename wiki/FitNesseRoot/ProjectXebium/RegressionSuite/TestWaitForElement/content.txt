@@ -1,0 +1,16 @@
+Small test when waiting for a particular text to come.
+
+!-
+<p id="showme" style="display: none">Hi there!</p>
+<script type="text/javascript">
+ setTimeout(function() {
+  document.getElementById("showme").removeAttribute("style");
+}, 4000);
+</script>
+-!
+
+!| script |
+| start browser | ${BROWSER} | on url | http://localhost:${FITNESSE_PORT}/ |
+| do | open | on | FrontPage |
+| ensure | is | verifyTextPresent | on | FrontPage |
+| ensure | do | waitForText | on | css=.breadcrumb>li | with | !-FrontPage-! |

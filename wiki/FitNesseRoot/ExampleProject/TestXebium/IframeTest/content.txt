@@ -1,0 +1,23 @@
+!4 testing iframe inside an iframe and swithing back to the main window
+
+#!-<iframe width="400px" height="200px" src="http://www.w3schools.com/Html/demo_iframe.htm" name="iframe_a"></iframe>
+#<p><a href="http://www.w3schools.com" target="iframe_a">W3Schools.com</a></p>-!
+
+| script | selenium driver fixture |
+| start browser | ${BROWSER} | on url | http://www.w3schools.com/ |
+| ensure | do | open | on | Html/tryit.asp?filename=tryhtml_iframe_target |
+| ensure | do | selectFrame | on | view |
+| ensure | do | clickAndWait | on | link=W3Schools.com |
+| ensure | do | selectFrame | on | iframe_a |
+| ensure | do | clickAndWait | on | id=menubutton |
+| ensure | do | clickAndWait | on | id=tutheader-xs |
+| ensure | do | click | on | link=Learn SVG |
+| ensure | do | selectWindow | on | null |
+| ensure | do | selectFrame | on | view |
+| ensure | do | clickAndWait | on | link=W3Schools.com |
+| ensure | do | selectFrame | on | iframe_a |
+| ensure | do | clickAndWait | on | id=menubutton |
+| ensure | do | clickAndWait | on | id=tutheader-xs |
+| ensure | do | click | on | link=Learn CSS |
+| ensure | do | selectWindow | on | null |
+| stop browser |
